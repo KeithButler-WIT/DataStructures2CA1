@@ -26,31 +26,35 @@ public class Controller {
     @FXML
     Button loadButton,removeButton,greyButton;
     @FXML
-    MenuItem quitButton,imagePicker;
+    MenuItem quitButton,FilePicker;
     @FXML
     Slider redSlider,greenSlider,blueSlider;
     PixelReader pixelReader;
     WritableImage wImage;
     PixelWriter pixelWriter;
-
-    //    private Desktop desktop=Desktop.getDesktop();
-//    final Stage stage;
-//    final FileChooser fileChooser=new FileChooser();
     Image image;
+
+    final FileChooser fileChooser = new FileChooser();
 
     private static final boolean DEBUG=true;
 
-//    public void openImage(ActionEvent actionEvent) {
-//        imageChooser.setOnAction(e -> {
-//            Image image=fileChooser.showOpenDialog(stage);
-//            if(image!=null) {
-//                imgview.setImage(image);
-//            }
-//        });
-//    }
+    public void chooseFile(ActionEvent actionEvent) {
+        FilePicker.setOnAction(e -> {
+            setExtFilters(fileChooser);
+            File file = fileChooser.showOpenDialog(new Stage());
+            imgview.setImage(new Image(file.toURI().toString()));
+        });
+    }
+
+    private void setExtFilters(FileChooser chooser) {
+        chooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Images", "*.*"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+    }
 
     public void loadImage(ActionEvent actionEvent) {
-        if(txtfield.getText()==null && txtfield.getText().equals("")) {
+        if((txtfield.getText()==null && txtfield.getText().equals(""))) {
             txtfield.setText("Insert image url here!");
         } else {
             loadButton.setOnAction(e -> {
