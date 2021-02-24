@@ -34,11 +34,10 @@ public class Controller {
     PixelWriter pixelWriter;
     Image image;
 
-    final FileChooser fileChooser = new FileChooser();
-
     private static final boolean DEBUG=true;
 
     public void chooseFile(ActionEvent actionEvent) {
+        final FileChooser fileChooser = new FileChooser();
         FilePicker.setOnAction(e -> {
             setExtFilters(fileChooser);
             File file = fileChooser.showOpenDialog(new Stage());
