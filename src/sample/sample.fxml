@@ -21,8 +21,8 @@
             </buttons>
         </ButtonBar>
         <TextField fx:id="txtfield" layoutX="224.0" layoutY="307.0" promptText="Image url" />
-        <ImageView fx:id="imgview" fitHeight="216.0" fitWidth="270.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="BWimgview" fitHeight="216.0" fitWidth="270.0" layoutX="330.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="imgview" fitHeight="216.0" fitWidth="270.0" layoutY="28.0" onMouseClicked="#getRGB" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="BWimgview" fitHeight="216.0" fitWidth="270.0" layoutX="330.0" layoutY="28.0" onMouseClicked="#getRGB" pickOnBounds="true" preserveRatio="true" />
         <MenuBar prefHeight="22.0" prefWidth="600.0">
             <menus>
                 <Menu mnemonicParsing="false" text="File">

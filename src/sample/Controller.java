@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -135,6 +136,18 @@ public class Controller {
         quitButton.setOnAction(e -> {
             System.exit(0);
         });
+    }
+
+    public void getRGB(MouseEvent mouseEvent) {
+//        int x = new Double(mouseEvent.getX()).intValue();
+//        int y = new Double(mouseEvent.getY()).intValue();
+        PixelReader r = BWimgview.getImage().getPixelReader();
+
+        System.out.println(image.getWidth());
+        System.out.println(image.getHeight());
+//        Color argb = r.getColor(x, y);
+        Color argb = r.getColor((int) mouseEvent.getX(),(int) mouseEvent.getY());
+        System.out.println(argb);
     }
 
 }
