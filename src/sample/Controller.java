@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 public class Controller {
     @FXML
-    ImageView imgview;
+    ImageView imgview,BWimgview;
     @FXML
     TextField txtfield;
     @FXML
@@ -32,7 +32,7 @@ public class Controller {
     PixelReader pixelReader;
     WritableImage wImage;
     PixelWriter pixelWriter;
-    Image image;
+    Image image,BWimage;
 
     private static final boolean DEBUG=true;
 
@@ -42,6 +42,8 @@ public class Controller {
             setExtFilters(fileChooser);
             File file = fileChooser.showOpenDialog(new Stage());
             imgview.setImage(new Image(file.toURI().toString()));
+            image=imgview.getImage();
+            imageReader();
         });
     }
 
@@ -62,15 +64,18 @@ public class Controller {
                 image = new Image(txtfield.getText());
                 imgview.setImage(image);
 
-                // Obtain PixelReader
-                pixelReader = image.getPixelReader();
-                // Create WritableImage
-                wImage = new WritableImage(
-                        (int) image.getWidth(),
-                        (int) image.getHeight());
-                pixelWriter = wImage.getPixelWriter();
+                imageReader();
             });
         }
+    }
+    private void imageReader(){
+        // Obtain PixelReader
+        pixelReader = image.getPixelReader();
+        // Create WritableImage
+        wImage = new WritableImage(
+                (int) image.getWidth(),
+                (int) image.getHeight());
+        pixelWriter = wImage.getPixelWriter();
     }
 
     public void setRedColor(ActionEvent actionEvent) {
@@ -116,7 +121,7 @@ public class Controller {
 
                 // Now write a greyscale color to the PixelWriter.
                 pixelWriter.setColor(readX,readY,color.grayscale());
-                imgview.setImage(wImage);
+                BWimgview.setImage(wImage);
             }
         }
         System.out.println("Image Width: "+image.getWidth());
