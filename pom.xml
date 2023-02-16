@@ -60,7 +60,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
     </dependencies>
 
@@ -71,6 +71,11 @@ THE POSSIBILITY OF SUCH DAMAGE.
             JMH version to use with this project.
           -->
         <jmh.version>1.36</jmh.version>
+
+        <!--
+            JMH version to use with this project.
+          -->
+        <javafx.version>17.0.2</javafx.version>
 
         <!--
             Java source/target to use for compilation.

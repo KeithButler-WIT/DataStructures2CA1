@@ -43,6 +43,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -50,6 +51,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller">
   <children>
@@ -115,6 +117,21 @@
                               <Slider fx:id="saturationSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefWidth="224.4087626857617" showTickMarks="true" snapToTicks="true" />
                               <Label text="Brightness" />
                               <Slider fx:id="brightnessSlider" blockIncrement="0.1" layoutX="10.0" layoutY="174.0" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefWidth="224.4087626857617" showTickMarks="true" snapToTicks="true" />
+                              <VBox>
+                                 <children>
+                                    <Label text="Min Size - Max Size (In Pixels)" />
+                                    <HBox>
+                                       <children>
+                                          <TextField fx:id="minSize" alignment="CENTER" promptText="Min disjoint set size" text="10" />
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" - " textAlignment="CENTER">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font></Text>
+                                          <TextField fx:id="maxSize" alignment="CENTER" promptText="Max disjoint set size" text="400" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </buttons>
