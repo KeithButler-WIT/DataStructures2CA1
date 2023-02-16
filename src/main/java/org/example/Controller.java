@@ -197,6 +197,7 @@ public class Controller {
         return pixelReader.getArgb(i%w, i/w);
     }
 
+
     private void imageArrayView(int[] imageArray) {
         // Viewing the 1D array
         System.out.println();
