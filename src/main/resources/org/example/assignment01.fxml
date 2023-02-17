@@ -34,7 +34,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -98,44 +97,53 @@
       <items>
         <AnchorPane prefHeight="549.0" prefWidth="160.0">
           <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Controls" textAlignment="CENTER" wrapText="false">
-              <font>
-                <Font size="18.0" fx:id="x1" />
-              </font>
-              <textFill>
-                <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
-              </textFill>
-            </Label>
-                  <ButtonBar layoutX="6.9737229347229" prefHeight="549.5521255104653" prefWidth="222.41401812855491" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <buttons>
-                        <VBox spacing="30.0">
+                  <VBox layoutX="9.0" prefHeight="417.0" prefWidth="208.0" spacing="30.0">
+                     <children>
+                  <Label alignment="CENTER" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Controls" textAlignment="CENTER" wrapText="false">
+                    <font>
+                      <Font size="18.0" fx:id="x1" />
+                    </font>
+                    <textFill>
+                      <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
+                    </textFill>
+                  </Label>
+                        <Button fx:id="grayscaleButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onKeyPressed="#onGrayscaleButtonClick" text="Grayscale" />
+                        <VBox>
                            <children>
-                              <Button fx:id="grayscaleButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onKeyPressed="#onGrayscaleButtonClick" text="Grayscale" />
                               <Label text="Hue" />
                               <Slider fx:id="hueSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefHeight="19.0" prefWidth="124.0" showTickMarks="true" snapToTicks="true" />
-                              <Label text="Saturation" />
-                              <Slider fx:id="saturationSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefWidth="224.4087626857617" showTickMarks="true" snapToTicks="true" />
-                              <Label text="Brightness" />
-                              <Slider fx:id="brightnessSlider" blockIncrement="0.1" layoutX="10.0" layoutY="174.0" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefWidth="224.4087626857617" showTickMarks="true" snapToTicks="true" />
-                              <VBox>
-                                 <children>
-                                    <Label text="Min Size - Max Size (In Pixels)" />
-                                    <HBox>
-                                       <children>
-                                          <TextField fx:id="minSize" alignment="CENTER" promptText="Min disjoint set size" text="10" />
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" - " textAlignment="CENTER">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font></Text>
-                                          <TextField fx:id="maxSize" alignment="CENTER" promptText="Max disjoint set size" text="400" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
                            </children>
                         </VBox>
-                     </buttons>
-                  </ButtonBar>
+                        <VBox>
+                           <children>
+                              <Label text="Saturation" />
+                              <Slider fx:id="saturationSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefWidth="224.4087626857617" showTickMarks="true" snapToTicks="true" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Brightness" />
+                              <Slider fx:id="brightnessSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="-1.0" minorTickCount="0" onMouseDragged="#onUpdateImageColors" prefWidth="224.4087626857617" showTickMarks="true" snapToTicks="true" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Min Size - Max Size (In Pixels)" />
+                              <HBox>
+                                 <children>
+                                    <TextField fx:id="minSizeText" alignment="CENTER" promptText="Min disjoint set size" text="10" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" - " textAlignment="CENTER">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <TextField fx:id="maxSizeText" alignment="CENTER" promptText="Max disjoint set size" text="400" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
           </children>
         </AnchorPane>
         <ScrollPane prefHeight="548.0" prefWidth="458.0">

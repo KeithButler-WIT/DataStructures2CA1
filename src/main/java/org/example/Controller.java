@@ -21,12 +21,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.min;
 
 public class Controller {
 //    https://stackoverflow.com/questions/5585779/how-do-i-convert-a-string-to-an-int-in-java
-    public TextField minSize;
-    public TextField maxSize; // Integer.parseInt(maxSize.getText);
+    public TextField minSizeText;
+    public TextField maxSizeText; // Integer.parseInt(maxSize.getText);
+    private int minSize;
+    private int maxSize;
     private Image originalImage;
     private Image grayscaleImage;
     @FXML
@@ -128,75 +129,86 @@ public class Controller {
     // Index = (row number * size of row) + column number
     // (y) row = index/rowsize
     // (x) column = index%rowsize
+    //TODO: use bitshift to allow the id to hold size/height
     private void disjointSet(int[] imageArray) {
+        minSize = Integer.parseInt(minSizeText.getText());
+        maxSize = Integer.parseInt(maxSizeText.getText());
+
         int width = (int) originalImage.getWidth();
-        int height = (int) originalImage.getHeight();
 
-        PixelReader pixelReader;
-        pixelReader = Objects.requireNonNullElseGet(grayscaleImage, () -> originalImage).getPixelReader();
-//        if (grayscaleImage != null) pixelReader = grayscaleImage.getPixelReader();
-//        else pixelReader = originalImage.getPixelReader();
-        WritableImage bwImage = new WritableImage(width, height);
+        PixelReader pixelReader = Objects.requireNonNullElseGet(grayscaleImage, () -> originalImage).getPixelReader();
 
+        // Initialise all white pixels to be their own root
         for (int i = 0; i < imageArray.length; i++) {
             int currentIndex = abs(((i / width)* width) + (i % width));
             int topLeftIndex = abs(((((i - width) / width) * width) + ((i - 1) % width)));
-            int topIndex = abs(((i - width) / width) * width+ (i % width));
+            int topIndex = abs(((i - width) / width) * width + (i % width));
             int topRightIndex = abs(((i - width) / width) * width + ((i + 1) % width));
             int leftIndex = abs((((i / width) * width) + ((i - 1) % width)));
 
-            Color pixelColor = pixelReader.getColor(i%width,i/width);
-            double pixelBrightness = pixelColor.getBrightness();
+            double pixelBrightness = pixelReader
+                    .getColor(i%width,i/width)
+                    .getBrightness();
 
             // sets black pixels to have a root of -1
             if (pixelBrightness <= minBrightness) {
                 imageArray[currentIndex] = -1;
             }
             //top left adjacent index
-            else if (imageArray[topLeftIndex] > -1) {
-//                System.out.println("top left index used");
-//                imageArray[currentIndex] = find(imageArray, imageArray[topLeftIndex]);
-                union(imageArray,topLeftIndex,currentIndex);
+            else if (imageArray[topLeftIndex] > 0) {
+                imageArray[currentIndex] = topLeftIndex;
             }
             //top adjacent index
-            else if (imageArray[topIndex] > -1) {
-//                System.out.println("top index used");
-//                imageArray[currentIndex] = find(imageArray, imageArray[topIndex]);
-                union(imageArray,topIndex,currentIndex);
+            else if (imageArray[topIndex] > 0) {
+                imageArray[currentIndex] = topIndex;
             }
             //top right adjacent index
-            else if (imageArray[topRightIndex] > -1) {
-//                System.out.println("top right index used");
-//                imageArray[currentIndex] = find(imageArray, imageArray[topRightIndex]);
-                union(imageArray,topRightIndex,currentIndex);
+            else if (imageArray[topRightIndex] > 0) {
+                imageArray[currentIndex] = topRightIndex;
             }
             //left adjacent index
-            else if (imageArray[leftIndex] > -1) {
-//                System.out.println("left index used");
-//                imageArray[currentIndex] = find(imageArray, imageArray[leftIndex]);
-                union(imageArray,leftIndex,currentIndex);
+            else if (imageArray[leftIndex] > 0) {
+                imageArray[currentIndex] = leftIndex;
+            }
+//            else {
+//                imageArray[currentIndex] = currentIndex;
+//            }
+        }
+
+        // Union
+        for (int i = 0; i < imageArray.length; i++) {
+            int currentIndex = abs(((i / width)* width) + (i % width));
+            int topIndex = abs(((i - width) / width) * width + (i % width));
+            int bottomIndex = abs(((i + width) / width) * width + (i % width));
+            int leftIndex = abs((((i / width) * width) + ((i - 1) % width)));
+            int rightIndex = abs((((i / width) * width) + ((i + 1) % width)));
+
+            // Not an ignored pixel
+            if (imageArray[currentIndex] != -1) {
+                //top adjacent index
+                if (imageArray[topIndex] > 0) {
+                    union(imageArray,topIndex,currentIndex);
+                }
+                //left adjacent index
+                else if (imageArray[leftIndex] > 0) {
+                    union(imageArray,leftIndex, currentIndex);
+                }
+                //right adjacent index
+                else if (imageArray[rightIndex] > 0) {
+                    union(imageArray,rightIndex,currentIndex);
+                }
+                //bottom adjacent index
+                else if (imageArray[bottomIndex] > 0) {
+                    union(imageArray,bottomIndex,currentIndex);
+                }
             }
         }
 
-//        originalImageView.setImage((bwImage));
-    }
+        for (int i = 0; i < imageArray.length; i++) {
 
-//    int size = 88;
-//    int height = 99;
-//    int root = 1;
-//    int value = (root << 31) + (height << 16) + size;
-    private boolean isRoot(int value) {
-        if (((value >> 32) & 0xff) >= 1) return true;
-        else return false;
-    }
+        }
 
-    // Index = (row number * size of row) + column number
-    // (y) row = index/rowsize
-    // (x) column = index%rowsize
-    private int getImagePixelColor (int i, int w, int h, PixelReader pixelReader) {
-        return pixelReader.getArgb(i%w, i/w);
     }
-
 
     private void imageArrayView(int[] imageArray) {
         // Viewing the 1D array
@@ -431,6 +443,50 @@ public class Controller {
             }
         }
         return colorImage;
+    }
+
+    private int getImagePixelColor (int i, int w, int h, PixelReader pixelReader) {
+        return pixelReader.getArgb(i%w, i/w);
+    }
+
+    //    int size = 88;
+//    int depth = 99;
+//    int root = 0;
+//    int value = (root << 31) + (depth << 16) + size;
+//    int newSize = (value & 0xff);
+//    int newDepth = ((value >> 16) & 0xff);
+//    int newroot = ((value >> 31) & 0xff);
+    private boolean isRoot(int value) {
+        // checks the last bit if 1 is root otherwise not root
+        return getRoot(value) >= 1;
+    }
+    private int getRoot(int value) {
+        // checks the last bit if 1 is root otherwise not root
+        return ((value >> 31) & 0xff);
+    }
+    private void setRoot(int[] a, int index, int value) {
+        int size = (value & 0xff);
+        int depth = ((a[index] >> 16) & 0xff);
+        int root = ((a[index] >> 31) & 0xff);
+        a[index] = (root << 31) + (depth << 16) + size;
+    }
+    private int getDepth(int value) {
+        return ((value >> 16) & 0xff);
+    }
+    private void setDepth(int[] a, int index, int value) {
+        int size = (a[index] & 0xff);
+        int depth = ((value << 16) & 0xff);
+        int root = ((a[index] >> 31) & 0xff);
+        a[index] = (root << 31) + (depth << 16) + size;
+    }
+    private int getSize(int value) {
+        return (value & 0xff);
+    }
+    private void setSize(int[] a, int index, int value) {
+        int size = (value & 0xff);
+        int depth = ((a[index] >> 16) & 0xff);
+        int root = ((a[index] >> 31) & 0xff);
+        a[index] = (root << 31) + (depth << 16) + size;
     }
 
 }
