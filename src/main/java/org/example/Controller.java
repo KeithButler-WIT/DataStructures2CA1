@@ -3,6 +3,7 @@ package org.example;
 import java.io.File;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -85,15 +86,7 @@ public class Controller {
         disjointSet(imageArray);
         imageArrayView(imageArray);
         grayscaleImageView.setImage(colorBWImage(blackWhiteImage,imageArray));
-//        for(int id=0;id<imageArray.length;id++)
-//            System.out.println("The root of element "+id+" is "+find(imageArray,id)+" (element value: "+imageArray[id]+")");
-//        for(int id=0;id<imageArray.length;id++)
-//            System.out.println("The root of "+id+" is "+ find(imageArray,id));
 
-//        for (int i = 0; i < imageArray.length; i++) {
-//
-//        }
-//
 //        Group imageGroup = new Group();
 //
 //        // need to know outer limits
@@ -204,9 +197,20 @@ public class Controller {
             }
         }
 
+        int numSets = 0;
+        ArrayList<Integer> knownRoots = new ArrayList<Integer>();
+        // Counts the total number of sets in the image
         for (int i = 0; i < imageArray.length; i++) {
-
+            //TODO: Count total number of sets
+            if (imageArray[i] != -1) {
+                int currentRoot = find(imageArray,i);
+                if (!knownRoots.contains(currentRoot)) {
+                    knownRoots.add(currentRoot);
+                    numSets++;
+                }
+            }
         }
+        System.out.println(numSets);
 
     }
 
@@ -265,8 +269,9 @@ public class Controller {
             // if root choose random color
             // else find root and use its color
 
+            // Randomly colors the root
             if (a[i] == i) {
-                int pixel = getImagePixelColor(i, width, height, pixelReader);
+                int pixel = getImagePixelColor(i, width, pixelReader);
                 int alpha = ((pixel >> 24) & 0xff);
 
                 Random rand = new Random();
@@ -279,14 +284,16 @@ public class Controller {
 
                 coloredBWImage.getPixelWriter().setArgb(x, y, color);
             }
+            // Gets the root color and set the current color to it
             else if (a[i] != -1) {
-                int pixel = getImagePixelColor(find(a,i), width, height, coloredBWImage.getPixelReader());
+                int pixel = getImagePixelColor(find(a,i), width, coloredBWImage.getPixelReader());
 //                System.out.println("Root : " + find(a,i));
 //                System.out.println("Color: " + pixel);
                 coloredBWImage.getPixelWriter().setArgb(x, y, pixel);
             }
+            // Sets ignored pixels to intended color
             else {
-                int pixel = getImagePixelColor(i,width,height,pixelReader);
+                int pixel = getImagePixelColor(i, width, pixelReader);
 //                System.out.println("Coloring black pixels: " + pixel);
                 coloredBWImage.getPixelWriter().setArgb(x, y, pixel);
             }
@@ -445,7 +452,7 @@ public class Controller {
         return colorImage;
     }
 
-    private int getImagePixelColor (int i, int w, int h, PixelReader pixelReader) {
+    private int getImagePixelColor (int i, int w, PixelReader pixelReader) {
         return pixelReader.getArgb(i%w, i/w);
     }
 
