@@ -148,15 +148,17 @@
         </AnchorPane>
         <ScrollPane prefHeight="548.0" prefWidth="458.0">
           <content>
-            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="548.0" prefWidth="523.0">
+            <AnchorPane fx:id="imageViewBox" id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="548.0" prefWidth="523.0">
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                        <ImageView fx:id="originalImageView" fitHeight="247.0" fitWidth="444.0" layoutX="4.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                           </image></ImageView>
-                        <ImageView fx:id="grayscaleImageView" fitHeight="247.0" fitWidth="444.0" layoutX="6.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                           </image></ImageView>
+                  <VBox>
+                      <ImageView fx:id="originalImageView" fitHeight="247.0" fitWidth="444.0" layoutX="4.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                          </image></ImageView>
+                      <ImageView fx:id="grayscaleImageView" fitHeight="247.0" fitWidth="444.0" layoutX="6.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                          </image></ImageView>
+                  </VBox>
               </children>
             </AnchorPane>
           </content>
@@ -164,10 +166,10 @@
         <AnchorPane prefHeight="548.0" prefWidth="196.0">
           <children>
             <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                  <Label layoutX="14.0" layoutY="40.0" prefHeight="29.0" prefWidth="78.0" text="Image Size:" />
-                  <Label fx:id="imageSizeLabel" layoutX="93.0" layoutY="40.0" prefHeight="29.0" prefWidth="116.0" text="0x0" />
+                  <Label layoutX="14.0" layoutY="40.0" prefHeight="29.0" prefWidth="78.0" text="Image Size:" wrapText="true" />
+                  <Label fx:id="imageSizeLabel" layoutX="93.0" layoutY="40.0" prefHeight="29.0" prefWidth="116.0" text="0x0" wrapText="true" />
                   <Label layoutX="14.0" layoutY="70.0" prefHeight="29.0" prefWidth="78.0" text="Image Name:" />
-                  <Label fx:id="imageNameLabel" layoutX="93.0" layoutY="70.0" prefHeight="29.0" />
+                  <Label fx:id="imageNameLabel" layoutX="93.0" layoutY="70.0" prefHeight="29.0" wrapText="true" />
           </children>
         </AnchorPane>
       </items>

@@ -16,6 +16,8 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -27,6 +29,7 @@ public class Controller {
 //    https://stackoverflow.com/questions/5585779/how-do-i-convert-a-string-to-an-int-in-java
     public TextField minSizeText;
     public TextField maxSizeText; // Integer.parseInt(maxSize.getText);
+    public AnchorPane imageViewBox;
     private int minSize;
     private int maxSize;
     private Image originalImage;
@@ -86,17 +89,6 @@ public class Controller {
         disjointSet(imageArray);
         imageArrayView(imageArray);
         grayscaleImageView.setImage(colorBWImage(blackWhiteImage,imageArray));
-
-//        Group imageGroup = new Group();
-//
-//        // need to know outer limits
-//        Circle circle = new Circle();
-//        circle.setCenterX(100.0f);
-//        circle.setCenterY(100.0f);
-//        circle.setRadius(50.0f);
-//
-//        imageGroup.getChildren().add(originalImageView);
-//        imageGroup.getChildren().add(circle);
     }
 
     // Takes the sliders value and adjusts the original image
@@ -212,6 +204,92 @@ public class Controller {
         }
         System.out.println(numSets);
 
+        drawCircles(numSets, imageArray, knownRoots);
+    }
+
+    private void drawCircles(int numSets, int[] imageArray, ArrayList<Integer> knownRoots) {
+        // Index = (row number * size of row) + column number
+        // (y) row = index/rowsize
+        // (x) column = index%rowsize
+
+        //TODO: draw circles around each disjoint set
+
+        int width = (int) originalImage.getWidth();
+
+        // loop through numSets and imageArray
+        for (int i = 0; i < numSets; i++) {
+            // need to know outer limits
+            int topLeft = 0;
+            int topRight = 0;
+            int bottomLeft = 0;
+            int bottomRight = 0;
+
+            int currentCircle = knownRoots.get(i);
+            for (int j = 0; j < imageArray.length; j++) {
+                if (imageArray[j] == -1) {
+                    continue;
+                }
+
+                int currentRoot = find(imageArray,j);
+                if (currentRoot != currentCircle) {
+                    continue;
+                }
+
+//                int x = j%width;
+//                int y = j/width;
+
+//                // get the top left position
+////                if (topLeft <= j && topLeft <= topRight && topLeft <= bottomLeft && topLeft <= bottomRight) {
+//                if (topLeft == 0) {
+//                    topLeft = j;
+//
+//                }
+//                // get the top right position
+//                else if () {
+//
+//                }
+//                // get the bottom left position
+//                else if () {
+//
+//                }
+//                // get the bottom right position
+//                bottomRight = j;
+
+                int currentIndex = abs(((i / width)* width) + (i % width));
+                int topIndex = abs(((i - width) / width) * width + (i % width));
+                int bottomIndex = abs(((i + width) / width) * width + (i % width));
+                int leftIndex = abs((((i / width) * width) + ((i - 1) % width)));
+                int rightIndex = abs((((i / width) * width) + ((i + 1) % width)));
+
+                //top left index
+                if (imageArray[topIndex] <= 0 && imageArray[leftIndex] <= 0) {
+                    topLeft = j;
+                }
+                //top right index
+                else if (imageArray[topIndex] <= 0 && imageArray[rightIndex] <= 0) {
+                    topRight = j;
+                }
+                //bottom left index
+                else if (imageArray[leftIndex] <= 0 && imageArray[bottomIndex] <= 0) {
+                    bottomLeft = j;
+                }
+                //bottom right index
+                else if (imageArray[rightIndex] <= 0 && imageArray[bottomIndex] <= 0) {
+                    bottomRight = j;
+                }
+            }
+            Circle circle = new Circle();
+//            circle.setCenterX((bottomRight%width) - (topLeft%width));
+//            circle.setCenterY((bottomRight/width) - (topLeft/width));
+            int center = (((topLeft%width) + (bottomRight%width))/2) * (((topLeft/width) + (bottomRight/width))/2);
+            int length = (((topLeft%width) + (bottomRight%width))^2) + (((topLeft/width) + (bottomRight/width))^2);
+            circle.setCenterX(((topLeft%width) + (bottomRight%width))/2);
+            circle.setCenterY(((topLeft/width) + (bottomRight/width))/2);
+            circle.setRadius(bottomLeft - topLeft);
+            circle.setFill(null);
+            circle.setStroke(Color.BLUE);
+            imageViewBox.getChildren().add(circle);
+        }
     }
 
     private void imageArrayView(int[] imageArray) {
