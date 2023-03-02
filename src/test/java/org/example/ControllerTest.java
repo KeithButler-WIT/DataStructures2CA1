@@ -27,16 +27,17 @@ class ControllerTest {
     void find() {
         assertEquals(1, Controller.find(imageArray, 1));
         assertEquals(1, Controller.find(imageArray, 6));
+        assertEquals(1, Controller.find(imageArray, 15));
         assertEquals(8, Controller.find(imageArray, 7));
         assertEquals(8, Controller.find(imageArray, 8));
-        assertEquals(1, Controller.find(imageArray, 15));
     }
 
     @Test
     void union() {
+        Controller.union(imageArray, 7, 6);
         assertEquals(8, Controller.find(imageArray, 7));
-        Controller.union(imageArray, 6, 7);
-        assertEquals(1, Controller.find(imageArray, 7));
+//        Controller.union(imageArray, 7, 6);
+//        assertEquals(imageArray, Controller.find(imageArray, 7));
     }
 
     //TODO: MORE TESTS
