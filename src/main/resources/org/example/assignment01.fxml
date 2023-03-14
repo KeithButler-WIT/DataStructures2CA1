@@ -148,16 +148,20 @@
         </AnchorPane>
         <ScrollPane prefHeight="548.0" prefWidth="458.0">
           <content>
-            <AnchorPane fx:id="imageViewBox" id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="548.0" prefWidth="523.0">
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0">
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                  <VBox>
-                      <ImageView fx:id="originalImageView" fitHeight="247.0" fitWidth="444.0" layoutX="4.0" pickOnBounds="true" preserveRatio="true">
+                  <VBox fillWidth="false">
+                       <Pane fx:id="imageViewBox"  prefHeight="200.0" prefWidth="200.0">
+                      <ImageView fx:id="originalImageView" fitHeight="247.0" fitWidth="444.0" pickOnBounds="true" preserveRatio="true">
                           <image>
                           </image></ImageView>
+                           </Pane>
+                      <Pane prefHeight="200.0" prefWidth="200.0">
                       <ImageView fx:id="grayscaleImageView" fitHeight="247.0" fitWidth="444.0" layoutX="6.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
                           <image>
                           </image></ImageView>
+                  </Pane>
                   </VBox>
               </children>
             </AnchorPane>
