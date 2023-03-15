@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a180732-be84-4d31-872d-815ee75f2938" name="Changes" comment="bitshifting partiatially working">
+    <list default="true" id="7a180732-be84-4d31-872d-815ee75f2938" name="Changes" comment="drawing circles around each disjoint set">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/org/example/assignment01.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/example/assignment01.fxml" afterDir="false" />
@@ -196,7 +196,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677756253530</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="drawing circles around each disjoint set">
+      <created>1678805022424</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1678805022424</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -217,7 +224,8 @@
     <MESSAGE value="added test methods" />
     <MESSAGE value="drawing circle in progress" />
     <MESSAGE value="bitshifting partiatially working" />
-    <option name="LAST_COMMIT_MESSAGE" value="bitshifting partiatially working" />
+    <MESSAGE value="drawing circles around each disjoint set" />
+    <option name="LAST_COMMIT_MESSAGE" value="drawing circles around each disjoint set" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

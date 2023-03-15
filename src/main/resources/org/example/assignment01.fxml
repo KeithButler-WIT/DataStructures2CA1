@@ -107,7 +107,7 @@
                       <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
                     </textFill>
                   </Label>
-                        <Button fx:id="grayscaleButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onKeyPressed="#onGrayscaleButtonClick" text="Grayscale" />
+                        <Button fx:id="grayscaleButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onKeyPressed="#onGrayscaleButtonClick" text="To Black/White" />
                         <VBox>
                            <children>
                               <Label text="Hue" />
@@ -152,7 +152,7 @@
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
                   <VBox fillWidth="false">
-                       <Pane fx:id="imageViewBox"  prefHeight="200.0" prefWidth="200.0">
+                       <Pane fx:id="imageViewBox" prefHeight="200.0" prefWidth="200.0">
                       <ImageView fx:id="originalImageView" fitHeight="247.0" fitWidth="444.0" pickOnBounds="true" preserveRatio="true">
                           <image>
                           </image></ImageView>
@@ -173,7 +173,9 @@
                   <Label layoutX="14.0" layoutY="40.0" prefHeight="29.0" prefWidth="78.0" text="Image Size:" wrapText="true" />
                   <Label fx:id="imageSizeLabel" layoutX="93.0" layoutY="40.0" prefHeight="29.0" prefWidth="116.0" text="0x0" wrapText="true" />
                   <Label layoutX="14.0" layoutY="70.0" prefHeight="29.0" prefWidth="78.0" text="Image Name:" />
-                  <Label fx:id="imageNameLabel" layoutX="93.0" layoutY="70.0" prefHeight="29.0" wrapText="true" />
+                  <Label fx:id="imageNameLabel" layoutX="93.0" layoutY="70.0" prefHeight="30.0" prefWidth="0.0" wrapText="true" />
+                  <Label layoutX="14.0" layoutY="95.0" prefHeight="29.0" prefWidth="78.0" text="Total Sets:" />
+                  <Label fx:id="totalNumSets" layoutX="93.0" layoutY="94.0" prefHeight="30.0" prefWidth="55.0" wrapText="true" />
           </children>
         </AnchorPane>
       </items>

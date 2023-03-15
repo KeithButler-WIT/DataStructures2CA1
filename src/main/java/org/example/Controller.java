@@ -33,6 +33,7 @@ public class Controller {
     public TextField minSizeText;
     public TextField maxSizeText; // Integer.parseInt(maxSize.getText);
     public Pane imageViewBox;
+    public Label totalNumSets;
     private int minSize;
     private int maxSize;
     private Image originalImage;
@@ -61,15 +62,19 @@ public class Controller {
     private Label imageSizeLabel;
     @FXML
     private Label imageNameLabel;
-    //TODO: add a slider to control this value
+    //TODO: this
     private double minBrightness = 0.3;
 
     @FXML
     private void initialize() {
 //        originalImage = new Image("file:/home/keith/workspace/college/Semester%204%20Repeat/Assignment01/src/main/resources/org/example/TestImage16x16.png");
-        originalImage =  new Image("file:/home/keith/workspace/college/Semester%204%20Repeat/Assignment01/src/main/resources/org/example/TestImage128x64.png");
-        originalImageView.setImage(originalImage);
+//        originalImage =  new Image("file:/home/keith/workspace/college/Semester%204%20Repeat/Assignment01/src/main/resources/org/example/TestImage128x64.png");
+//        originalImageView.setImage(originalImage);
+//
+//        run();
+    }
 
+    private void run() {
         int width = (int) originalImage.getWidth();
         int height = (int) originalImage.getHeight();
 
@@ -93,9 +98,9 @@ public class Controller {
         Image blackWhiteImage = toBlackAndWhite(originalImage, imageArray);
         grayscaleImageView.setImage(blackWhiteImage);
 
-        imageArrayView(imageArray);
+//        imageArrayView(imageArray);
         disjointSet(imageArray);
-        imageArrayView(imageArray);
+//        imageArrayView(imageArray);
         grayscaleImageView.setImage(colorBWImage(blackWhiteImage, imageArray));
 
         ArrayList<Integer> knownRoots = new ArrayList<>();
@@ -106,7 +111,6 @@ public class Controller {
     // Index = (row number * size of row) + column number
     // (y) row = index/rowsize
     // (x) column = index%rowsize
-    //TODO: use bitshift to allow the id to hold size/height
     private void disjointSet(int[] imageArray) {
         minSize = Integer.parseInt(minSizeText.getText());
         maxSize = Integer.parseInt(maxSizeText.getText());
@@ -136,27 +140,27 @@ public class Controller {
 
             //top left adjacent index
             if (!isIgnored(imageArray[topLeftIndex])) {
-//                imageArray[currentIndex] = topLeftIndex;
-//                System.out.println("Top Left Index: " + topLeftIndex);
                 setRoot(imageArray, currentIndex, topLeftIndex);
+//                setSize(imageArray,find(imageArray,topLeftIndex), getSize(find(imageArray, topLeftIndex))+1);
+//                setSize(imageArray,topLeftIndex, getSize(find(imageArray, topLeftIndex))+1);
             }
             //top adjacent index
             if (!isIgnored(imageArray[topIndex])) {
-//            else if (imageArray[topIndex] > 0) {
-//                imageArray[currentIndex] = topIndex;
                 setRoot(imageArray, currentIndex, topIndex);
+//                setSize(imageArray,find(imageArray,topIndex), getSize(find(imageArray, topIndex))+1);
+//                setSize(imageArray,topIndex, getSize(find(imageArray, topIndex))+1);
             }
             //top right adjacent index
             if (!isIgnored(imageArray[topRightIndex])) {
-//            else if (imageArray[topRightIndex] > 0) {
-//                imageArray[currentIndex] = topRightIndex;
                 setRoot(imageArray, currentIndex, topRightIndex);
+//                setSize(imageArray,find(imageArray, topRightIndex), getSize(find(imageArray, topRightIndex))+1);
+//                setSize(imageArray, topRightIndex, getSize(find(imageArray, topRightIndex))+1);
             }
             //left adjacent index
             if (!isIgnored(imageArray[leftIndex])) {
-//            else if (imageArray[leftIndex] > 0) {
-//                imageArray[currentIndex] = leftIndex;
                 setRoot(imageArray, currentIndex, leftIndex);
+//                setSize(imageArray,find(imageArray,leftIndex), getSize(find(imageArray, leftIndex))+1);
+//                setSize(imageArray, leftIndex, getSize(find(imageArray, leftIndex))+1);
             }
         }
 
@@ -176,29 +180,18 @@ public class Controller {
             //top adjacent index
             if (topIndex / width > 0 && !isIgnored(imageArray[topIndex])) {
                 union(imageArray, topIndex, currentIndex);
-//                union(imageArray,currentIndex,topIndex);
-//                System.out.println("top union");
             }
             //left adjacent index
-//            else if (getRoot(imageArray[leftIndex]) > 0) {
             else if (leftIndex % width > 0 && !isIgnored(imageArray[leftIndex])) {
                 union(imageArray, leftIndex, currentIndex);
-//                union(imageArray,currentIndex,leftIndex);
-//                System.out.println("left union");
             }
             //right adjacent index
-//            else if (getRoot(imageArray[rightIndex]) > 0) {
             else if (rightIndex % width < width && !isIgnored(imageArray[rightIndex])) {
                 union(imageArray, rightIndex, currentIndex);
-//                union(imageArray,currentIndex,rightIndex);
-//                System.out.println("right union");
             }
             //bottom adjacent index
-//            else if (getRoot(imageArray[bottomIndex]) == -1) {
             else if (bottomIndex / width < height && !isIgnored(imageArray[bottomIndex])) {
                 union(imageArray, bottomIndex, currentIndex);
-//                union(imageArray,currentIndex,bottomIndex);
-//                System.out.println("bottom union");
             }
         }
     }
@@ -207,7 +200,6 @@ public class Controller {
         int numSets = 0;
 //         Counts the total number of sets in the image
         for (int i = 0; i < imageArray.length; i++) {
-//            TODO: Count total number of sets
             if (isIgnored(imageArray[i])) {
                 continue;
             }
@@ -222,16 +214,14 @@ public class Controller {
             }
         }
         System.out.println(numSets);
+        totalNumSets.setText(String.valueOf(numSets));
         return numSets;
     }
 
-    //TODO: Finish drawCircles
     private void drawCircles(int numSets, int[] imageArray, ArrayList<Integer> knownRoots) {
         // Index = (row number * size of row) + column number
         // (y) row = index/rowsize
         // (x) column = index%rowsize
-
-        //TODO: draw circles around each disjoint set
 
         int width = (int) originalImage.getWidth();
         int height = (int) originalImage.getHeight();
@@ -296,36 +286,39 @@ public class Controller {
             totalGreen = totalGreen / getSize(imageArray[currentCircle]);
             totalBlue = totalBlue / getSize(imageArray[currentCircle]);
 
-            System.out.println("-------TOP LEFT POSITION--------");
-            System.out.println("\t\t( " + minX + " , " + minY + " )");
-            System.out.println("-----BOTTOM RIGHT POSITION------");
-            System.out.println("\t\t( " + maxX + " , " + maxY + " )");
-            System.out.println("--------------------------------");
-
-            double paneWidth = originalImageView.getLayoutBounds().getWidth();
-            double paneHeight = originalImageView.getLayoutBounds().getHeight();
+            double paneWidth = imageViewBox.getBoundsInLocal().getWidth();
+            double paneHeight = imageViewBox.getBoundsInLocal().getHeight();
+//            System.out.println("Pane Width:  " + paneWidth);
+//            System.out.println("Pane Height: " + paneHeight);
+//            double paneWidth = originalImageView.getLayoutBounds().getWidth();
+//            double paneHeight = originalImageView.getLayoutBounds().getHeight();
             Circle circle = new Circle();
             // Pythagoras Theorem
             circle.setCenterX(((minX + maxX) / 2f) * (paneWidth / width));
             circle.setCenterY(((minY + maxY) / 2f) * (paneHeight / height));
-            System.out.println("Circle center: ( " + circle.getCenterX() + " , " + circle.getCenterY() + " )");
             // Length formula using the outer bounds of the circle
             double length = sqrt(((maxX - minX) ^ 2) + ((maxY - minY) ^ 2));
-            circle.setRadius((length) * (paneHeight/ height));
-            System.out.println("Radius: " + circle.getRadius());
+            circle.setRadius((length) * (paneHeight / height));
             circle.setFill(null);
             circle.setStroke(Color.BLUE);
             imageViewBox.getChildren().add(circle);
 
-            //TODO: labelCircles with RGB contents
+//            System.out.println("-------TOP LEFT POSITION--------");
+//            System.out.println("\t\t( " + minX + " , " + minY + " )");
+//            System.out.println("-----BOTTOM RIGHT POSITION------");
+//            System.out.println("\t\t( " + maxX + " , " + maxY + " )");
+//            System.out.println("--------------------------------");
+//            System.out.println("Circle center: ( " + circle.getCenterX() + " , " + circle.getCenterY() + " )");
+//            System.out.println("Radius: " + circle.getRadius());
+
             //https://stackoverflow.com/questions/48173943/javafx-how-to-implement-a-custom-tooltip
-            Tooltip.install(circle, new Tooltip("Contents:\n"+totalRed+"\n"+totalGreen+"\n"+totalBlue));
+            Tooltip.install(circle, new Tooltip("Contents:\n"
+                    +"Estimated Size (pixel units): "+getSize(imageArray[currentCircle])+"\n"
+                    +"Estimated Sulphur: "+totalRed+"\n"
+                    +"Estimated Hydrogen: "+totalGreen+"\n"
+                    +"Estimated Oxygen: "+totalBlue));
         }
     }
-
-//    private String labelCircle(int root) {
-//        return "";
-//    }
 
     private void imageArrayView(int[] imageArray) {
         // Viewing the 1D array
@@ -444,10 +437,10 @@ public class Controller {
     //Quick union of disjoint sets containing elements p and q
     //TODO: Change to union-by-size
     public static void union(int[] a, int p, int q) {
-//        int root = find(a,q);
-//        setRoot(a,find(a,q),find(a,p));
-        setRoot(a, find(a, q), find(a, p));
-//        setSize(a,root,getSize(root) + getSize(a[find(a,p)]));
+        int root1 = find(a,q);
+        int root2 = find(a,p);
+        setSize(a,root1,getSize(root1) + getSize(a[root2]));
+        setRoot(a, root1, root2);
 //        a[find(a,q)]=find(a,p); //The root of q is made reference the root of p
     }
 
@@ -494,10 +487,10 @@ public class Controller {
 
     @FXML
     public void onGrayscaleButtonClick(KeyEvent keyEvent) {
-        //TODO: Clean up onClick method
         Image grayscaleImage = toGrayScale(originalImage);
 //        Image grayscaleImage = toBlackAndWhite(originalImage);
         grayscaleImageView.setImage(grayscaleImage);
+        run();
     }
 
     @FXML
@@ -507,6 +500,7 @@ public class Controller {
         File file = fileChooser.showOpenDialog(originalImageView.getScene().getWindow());
         if (file != null) {
             openFile(file);
+            run();
         }
     }
 
@@ -625,48 +619,33 @@ public class Controller {
     // last 1 bit is if the set is ignored
 
     //    https://stackoverflow.com/questions/1080150/getting-the-bottom-16-bits-of-a-java-int-as-a-signed-16-bit-value
-    //TODO: 0xff only gets 8 bits
-    // 0xffff gets 16 bits
+    // Checks if the first 16 bits is 0
     private static boolean isIgnored(int value) {
         // checks the last bit if 1 is root otherwise not root
 //        return getUsed(value) == 0;
         return getRoot(value) == 0;
     }
 
-    private static int getUsed(int value) {
-        // checks the last bit if 1 is root otherwise not root
-        return ((value >> 31) & 0xf);
-//        return (value & 0x01);
-    }
-
-    private static void setUsed(int[] a, int index, int value) {
-        int root = (a[index] & 0xffff);
-        int size = ((a[index] >> 16) & 0xffff);
-//        int size = (((a[index] >> 16) >> 31) & 0xff);
-//        int used = ((value >> 31) & 0xff);
-        a[index] = (value << 31) + (size << 16) + root;
-    }
-
+    // Returns the last 16 bits
     private static int getSize(int value) {
         return ((value >> 16) & 0xffff);
     }
 
+    // Sets the first 16 bits to the sets size
     private static void setSize(int[] a, int index, int value) {
         int root = (a[index] & 0xffff);
-//        int size = ((value >> 16) & 0xff);
-        int used = ((a[index] >> 31) & 0xff);
-        a[index] = (used << 31) + (value << 16) + root;
+        a[index] = (value << 16) + root;
     }
 
+    // Returns the first 16 bits
     private static int getRoot(int value) {
         return (value & 0xffff);
     }
 
+    // Sets the first 16 bits to the roots index
     private static void setRoot(int[] a, int index, int value) {
-//        int root = (value & 0xff);
         int size = ((a[index] >> 16) & 0xffff);
-        int used = ((a[index] >> 31) & 0xff);
-        a[index] = (used << 31) + (size << 16) + value;
+        a[index] = (size << 16) + value;
     }
 
 }
