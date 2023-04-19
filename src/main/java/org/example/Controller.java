@@ -17,27 +17,29 @@ import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
 public class Controller {
     public TextField minSizeText;
     public TextField maxSizeText; // Integer.parseInt(maxSize.getText);
     public Pane imageViewBox;
     public Label totalNumSets;
+    public Button blackWhiteButton;
     private int minSize;
     private int maxSize;
     private Image originalImage;
-    private Image grayscaleImage;
+    private Image blackWhiteImage;
     @FXML
     private Slider hueSlider;
     @FXML
@@ -49,7 +51,7 @@ public class Controller {
     @FXML
     private ImageView originalImageView;
     @FXML
-    private ImageView grayscaleImageView;
+    private ImageView blackWhiteImageView;
     @FXML
     private ImageView redImageView;
     @FXML
@@ -62,16 +64,16 @@ public class Controller {
     private Label imageSizeLabel;
     @FXML
     private Label imageNameLabel;
-    //TODO: this
+    //TODO: add slider to adjust this
     private double minBrightness = 0.3;
 
     @FXML
     private void initialize() {
-//        originalImage = new Image("file:/home/keith/workspace/college/Semester%204%20Repeat/Assignment01/src/main/resources/org/example/TestImage16x16.png");
+        originalImage = new Image("file:/home/keith/workspace/college/Semester%204%20Repeat/Assignment01/src/main/resources/org/example/TestImage16x16.png");
 //        originalImage =  new Image("file:/home/keith/workspace/college/Semester%204%20Repeat/Assignment01/src/main/resources/org/example/TestImage128x64.png");
-//        originalImageView.setImage(originalImage);
-//
-//        run();
+        originalImageView.setImage(originalImage);
+
+        run();
     }
 
     private void run() {
@@ -79,7 +81,7 @@ public class Controller {
         int height = (int) originalImage.getHeight();
 
         // Saving the image to a 1D array
-        int[] imageArray = new int[width * height];
+        long[] imageArray = new long[width * height];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -88,20 +90,21 @@ public class Controller {
                 setRoot(imageArray, index, index);
                 // Initialize all sets to a size of 1
                 setSize(imageArray, index, 1);
-                // Initialize all sets to not be ignored - overwrite later
-//                setUsed(imageArray, index,1);
+
+//                System.out.println((imageArray[index] >> 32) & 0xffffffffL);
+//                System.out.println(getSize(imageArray[index]));
 //                imageArray[(y*width) + x] = (y*width) + x;
             }
         }
 
-        imageArrayView(imageArray);
+//        imageArrayView(imageArray);
         Image blackWhiteImage = toBlackAndWhite(originalImage, imageArray);
-        grayscaleImageView.setImage(blackWhiteImage);
+        blackWhiteImageView.setImage(blackWhiteImage);
 
 //        imageArrayView(imageArray);
         disjointSet(imageArray);
 //        imageArrayView(imageArray);
-        grayscaleImageView.setImage(colorBWImage(blackWhiteImage, imageArray));
+        blackWhiteImageView.setImage(colorBWImage(blackWhiteImage, imageArray));
 
         ArrayList<Integer> knownRoots = new ArrayList<>();
         int numSets = countSets(imageArray, knownRoots);
@@ -111,10 +114,7 @@ public class Controller {
     // Index = (row number * size of row) + column number
     // (y) row = index/rowsize
     // (x) column = index%rowsize
-    private void disjointSet(int[] imageArray) {
-        minSize = Integer.parseInt(minSizeText.getText());
-        maxSize = Integer.parseInt(maxSizeText.getText());
-
+    private void disjointSet(long[] imageArray) {
         int width = (int) originalImage.getWidth();
         int height = (int) originalImage.getHeight();
 
@@ -138,30 +138,34 @@ public class Controller {
                     .getColor(i % width, i / width)
                     .getBrightness();
 
+//            System.out.println(getSize(imageArray[currentIndex]));
+
             //top left adjacent index
             if (!isIgnored(imageArray[topLeftIndex])) {
+                setSize(imageArray, topLeftIndex, getSize(find(imageArray, topLeftIndex))+1);
+                setSize(imageArray, currentIndex, getSize(find(imageArray, currentIndex))+1);
                 setRoot(imageArray, currentIndex, topLeftIndex);
-//                setSize(imageArray,find(imageArray,topLeftIndex), getSize(find(imageArray, topLeftIndex))+1);
-//                setSize(imageArray,topLeftIndex, getSize(find(imageArray, topLeftIndex))+1);
             }
             //top adjacent index
             if (!isIgnored(imageArray[topIndex])) {
+                setSize(imageArray, topIndex, getSize(find(imageArray, topIndex))+1);
+                setSize(imageArray, currentIndex, getSize(find(imageArray, currentIndex))+1);
                 setRoot(imageArray, currentIndex, topIndex);
-//                setSize(imageArray,find(imageArray,topIndex), getSize(find(imageArray, topIndex))+1);
-//                setSize(imageArray,topIndex, getSize(find(imageArray, topIndex))+1);
             }
             //top right adjacent index
             if (!isIgnored(imageArray[topRightIndex])) {
+                setSize(imageArray, topRightIndex, getSize(find(imageArray, topRightIndex))+1);
+                setSize(imageArray, currentIndex, getSize(find(imageArray, currentIndex))+1);
                 setRoot(imageArray, currentIndex, topRightIndex);
-//                setSize(imageArray,find(imageArray, topRightIndex), getSize(find(imageArray, topRightIndex))+1);
-//                setSize(imageArray, topRightIndex, getSize(find(imageArray, topRightIndex))+1);
             }
             //left adjacent index
             if (!isIgnored(imageArray[leftIndex])) {
+                setSize(imageArray, leftIndex, getSize(find(imageArray, leftIndex))+1);
+                setSize(imageArray, currentIndex, getSize(find(imageArray, currentIndex))+1);
                 setRoot(imageArray, currentIndex, leftIndex);
-//                setSize(imageArray,find(imageArray,leftIndex), getSize(find(imageArray, leftIndex))+1);
-//                setSize(imageArray, leftIndex, getSize(find(imageArray, leftIndex))+1);
             }
+
+            System.out.println(getSize(imageArray[currentIndex]));
         }
 
         // Union
@@ -196,29 +200,34 @@ public class Controller {
         }
     }
 
-    private int countSets(int[] imageArray, ArrayList<Integer> knownRoots) {
+    public int countSets(long[] imageArray, ArrayList<Integer> knownRoots) {
         int numSets = 0;
 //         Counts the total number of sets in the image
         for (int i = 0; i < imageArray.length; i++) {
             if (isIgnored(imageArray[i])) {
                 continue;
             }
-//            if (getSize(i) == 1) {
-//                continue;
-//            }
 
+            if (getSize(imageArray[i]) > 1) {
+                System.out.println(getSize(imageArray[i]));
+            }
             int currentRoot = find(imageArray, i);
             if (!knownRoots.contains(currentRoot)) {
                 knownRoots.add(currentRoot);
                 numSets++;
             }
         }
-        System.out.println(numSets);
+//        System.out.println(numSets);
         totalNumSets.setText(String.valueOf(numSets));
         return numSets;
     }
 
-    private void drawCircles(int numSets, int[] imageArray, ArrayList<Integer> knownRoots) {
+    private void drawCircles(int numSets, long[] imageArray, ArrayList<Integer> knownRoots) {
+        // Removes old circles before adding new ones
+        for(int i=0; i<imageViewBox.getChildren().size(); i++)
+            if(imageViewBox.getChildren().get(i) instanceof Circle)
+                imageViewBox.getChildren().remove(i);
+
         // Index = (row number * size of row) + column number
         // (y) row = index/rowsize
         // (x) column = index%rowsize
@@ -226,6 +235,9 @@ public class Controller {
         int width = (int) originalImage.getWidth();
         int height = (int) originalImage.getHeight();
 
+//        if (getSize(imageArray[i]) > 1) {
+//            System.out.println(getSize(imageArray[i]));
+//        }
         // loop through numSets and imageArray
         for (int i = 0; i < numSets; i++) {
             // need to know outer limits
@@ -239,6 +251,7 @@ public class Controller {
             double totalBlue = 0.0;
 
             int currentCircle = knownRoots.get(i);
+//            System.out.println(getSize(imageArray[currentCircle]));
             for (int j = 0; j < imageArray.length; j++) {
                 if (isIgnored(imageArray[j])) {
                     continue;
@@ -257,18 +270,18 @@ public class Controller {
                     minX = x;
 //                    System.out.println(minX);
                 }
+                // Set maxX
+                else if (x > maxX) {
+                    maxX = x;
+//                    System.out.println("maxX: " + maxX);
+                }
                 // Set minY
                 if (y < minY) {
                     minY = y;
 //                    System.out.println(minY);
                 }
-                // Set maxX
-                if (x > maxX) {
-                    maxX = x;
-//                    System.out.println("maxX: " + maxX);
-                }
                 // Set maxY
-                if (y > maxY) {
+                else if (y > maxY) {
                     maxY = y;
 //                    System.out.println(maxY);
                 }
@@ -288,20 +301,16 @@ public class Controller {
 
             double paneWidth = imageViewBox.getBoundsInLocal().getWidth();
             double paneHeight = imageViewBox.getBoundsInLocal().getHeight();
-//            System.out.println("Pane Width:  " + paneWidth);
-//            System.out.println("Pane Height: " + paneHeight);
-//            double paneWidth = originalImageView.getLayoutBounds().getWidth();
-//            double paneHeight = originalImageView.getLayoutBounds().getHeight();
             Circle circle = new Circle();
             // Pythagoras Theorem
             circle.setCenterX(((minX + maxX) / 2f) * (paneWidth / width));
             circle.setCenterY(((minY + maxY) / 2f) * (paneHeight / height));
             // Length formula using the outer bounds of the circle
             double length = sqrt(((maxX - minX) ^ 2) + ((maxY - minY) ^ 2));
-            circle.setRadius((length) * (paneHeight / height));
-            circle.setFill(null);
+//            circle.setRadius((length) * (paneHeight / height));
+            circle.setRadius(((maxY-minY)/2f) * (paneWidth/width));
+            circle.setFill(Color.color(0,0,0,0));
             circle.setStroke(Color.BLUE);
-            imageViewBox.getChildren().add(circle);
 
 //            System.out.println("-------TOP LEFT POSITION--------");
 //            System.out.println("\t\t( " + minX + " , " + minY + " )");
@@ -316,11 +325,21 @@ public class Controller {
                     +"Estimated Size (pixel units): "+getSize(imageArray[currentCircle])+"\n"
                     +"Estimated Sulphur: "+totalRed+"\n"
                     +"Estimated Hydrogen: "+totalGreen+"\n"
-                    +"Estimated Oxygen: "+totalBlue));
+                    +"Estimated Oxygen: "+totalBlue
+            ));
+
+            // Removes Circles when right-clicked
+            circle.setOnMouseClicked(e  -> {
+                if (e.getButton() == MouseButton.SECONDARY) {
+                    imageViewBox.getChildren().remove(circle);
+                }
+            });
+
+            imageViewBox.getChildren().add(circle);
         }
     }
 
-    private void imageArrayView(int[] imageArray) {
+    private void imageArrayView(long[] imageArray) {
         // Viewing the 1D array
         System.out.println();
         System.out.print("index: " + "\t|\t");
@@ -328,19 +347,19 @@ public class Controller {
             System.out.print(i + "\t|\t");
         System.out.println();
         System.out.print("root: " + "\t|\t");
-        for (int i : imageArray)
+        for (long i : imageArray)
             System.out.print(getRoot(i) + "\t|\t");
         System.out.println();
     }
 
     // Takes in an image and returns it in black/white
-    private Image toBlackAndWhite(Image sourceImage, int[] imageArray) {
+    private Image toBlackAndWhite(Image sourceImage, long[] imageArray) {
         PixelReader pixelReader = sourceImage.getPixelReader();
 
         int width = (int) sourceImage.getWidth();
         int height = (int) sourceImage.getHeight();
 
-        WritableImage grayImage = new WritableImage(width, height);
+        WritableImage blackWhiteImage = new WritableImage(width, height);
 
         for (int i = 0; i < imageArray.length; i++) {
             int x = i % width;
@@ -348,22 +367,23 @@ public class Controller {
 
             Color pixelColor = pixelReader.getColor(x, y);
             if (pixelColor.getBrightness() >= minBrightness) {
-//                grayImage.getPixelWriter().setArgb(x, y, -1);
-                grayImage.getPixelWriter().setColor(x, y, Color.WHITE);
+                blackWhiteImage.getPixelWriter().setColor(x, y, Color.WHITE);
                 setRoot(imageArray, i, i);
             } else {
-//                grayImage.getPixelWriter().setArgb(x, y, -16777216);
-                grayImage.getPixelWriter().setColor(x, y, Color.BLACK);
+                blackWhiteImage.getPixelWriter().setColor(x, y, Color.BLACK);
                 setRoot(imageArray, i, 0);
             }
         }
-        return grayImage;
+        return blackWhiteImage;
     }
 
     // Index = (row number * size of row) + column number
     // row = index/rowsize
     // column = index%rowsize
-    private Image colorBWImage(Image sourceImage, int[] a) {
+    private Image colorBWImage(Image sourceImage, long[] a) {
+        minSize = Integer.parseInt(minSizeText.getText());
+        maxSize = Integer.parseInt(maxSizeText.getText());
+
         PixelReader pixelReader = sourceImage.getPixelReader();
 
         int width = (int) sourceImage.getWidth();
@@ -375,7 +395,7 @@ public class Controller {
             int x = i % width;
             int y = i / width;
 
-            if (isIgnored(a[i])) {
+            if (isIgnored(a[i])) { // skip black pixels
                 int pixel = getImagePixelColor(i, width, pixelReader);
                 coloredBWImage.getPixelWriter().setArgb(x, y, pixel);
 //                System.out.println("Root : " + find(a,i));
@@ -383,6 +403,11 @@ public class Controller {
             }
             // Randomly colors the root
             else if (getRoot(a[i]) == i) {
+                if (getSize(a[i]) < minSize && getSize(a[i]) > maxSize) {
+                    setRoot(a,i,0);
+                    continue;
+                }
+
                 int pixel = getImagePixelColor(i, width, pixelReader);
                 int alpha = ((pixel >> 24) & 0xff);
 
@@ -391,10 +416,6 @@ public class Controller {
                 int green = rand.nextInt(256);
                 int blue = rand.nextInt(256);
                 int color = (alpha << 24) + (red << 16) + (green << 8) + blue;
-//                System.out.println("Root : " + find(a,i));
-//                System.out.println("Size: " + getSize(i));
-//                System.out.println("Use: " + getUsed(i));
-//                System.out.println("Color: " + color);
 
                 coloredBWImage.getPixelWriter().setArgb(x, y, color);
             }
@@ -417,59 +438,25 @@ public class Controller {
         return coloredBWImage;
     }
 
-    //Iterative version of find with path compression
-//    public static int find(int[] a, int id) {
-//        while(id!=-1 && a[id]!=id) {
-//            a[id]=a[a[id]]; //Compress path
-//            id=a[id];
-//        }
-//        return id;
-//    }
-    // Find with bitshifting
-    public static int find(int[] a, int id) {
+    //Iterative version of find with path compression and bitshifting
+    public static int find(long[] a, int id) {
         while (!isIgnored(a[id]) && getRoot(a[id]) != id) {
-            setRoot(a, id, getRoot(a[getRoot(a[id])]));
-            id = getRoot(a[id]);
+            // TODO: Remove type casting
+            setRoot(a, id, (int) getRoot(a[(int) getRoot(a[id])]));
+            id = (int) getRoot(a[id]);
         }
         return id;
     }
 
     //Quick union of disjoint sets containing elements p and q
     //TODO: Change to union-by-size
-    public static void union(int[] a, int p, int q) {
-        int root1 = find(a,q);
-        int root2 = find(a,p);
-        setSize(a,root1,getSize(root1) + getSize(a[root2]));
-        setRoot(a, root1, root2);
-//        a[find(a,q)]=find(a,p); //The root of q is made reference the root of p
-    }
-
-    // Takes in an image and returns it in grayscale
-    private Image toGrayScale(Image sourceImage) {
-        PixelReader pixelReader = sourceImage.getPixelReader();
-
-        int width = (int) sourceImage.getWidth();
-        int height = (int) sourceImage.getHeight();
-
-        WritableImage grayImage = new WritableImage(width, height);
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixel = pixelReader.getArgb(x, y);
-
-                int alpha = ((pixel >> 24) & 0xff);
-                int red = ((pixel >> 16) & 0xff);
-                int green = ((pixel >> 8) & 0xff);
-                int blue = (pixel & 0xff);
-//                System.out.println(blue);
-
-                int grayLevel = (int) (0.2162 * red + 0.7152 * green + 0.0722 * blue);
-                int gray = (alpha << 24) + (grayLevel << 16) + (grayLevel << 8) + grayLevel;
-
-                grayImage.getPixelWriter().setArgb(x, y, gray);
-            }
-        }
-        return grayImage;
+    public static void union(long[] a, int p, int q) {
+        int rootp = find(a,p);
+        int rootq = find(a,q);
+        setSize(a,rootp,getSize(a[rootp]) + getSize(a[rootq]));
+        setSize(a,rootq,getSize(a[rootp]) + getSize(a[rootq]));
+        setRoot(a, rootp, rootq); //The root of q is made reference the root of p
+//        a[find(a,q)]=find(a,p);
     }
 
     // Takes the sliders value and adjusts the original image
@@ -486,10 +473,7 @@ public class Controller {
     }
 
     @FXML
-    public void onGrayscaleButtonClick(KeyEvent keyEvent) {
-        Image grayscaleImage = toGrayScale(originalImage);
-//        Image grayscaleImage = toBlackAndWhite(originalImage);
-        grayscaleImageView.setImage(grayscaleImage);
+    public void onBlackWhiteButtonClick(MouseEvent mouseEvent) {
         run();
     }
 
@@ -500,7 +484,7 @@ public class Controller {
         File file = fileChooser.showOpenDialog(originalImageView.getScene().getWindow());
         if (file != null) {
             openFile(file);
-            run();
+//            run();
         }
     }
 
@@ -532,7 +516,7 @@ public class Controller {
     public void onSaveClick(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Image");
-        System.out.println(grayscaleImageView.getId());
+        System.out.println(blackWhiteImageView.getId());
         File file = fileChooser.showOpenDialog(originalImageView.getScene().getWindow());
         if (file != null) {
 //                try {
@@ -606,46 +590,37 @@ public class Controller {
         return pixelReader.getArgb(i % w, i / w);
     }
 
-    private static int getX(int value, int width) {
-        return value % width;
-    }
-
-    private static int getY(int value, int width) {
-        return value / width;
-    }
-
-    // First 16 bits is the root
-    // Next 15 bits is the size
-    // last 1 bit is if the set is ignored
+    // First 32 bits is the root
+    // Last 32 bits is the size
 
     //    https://stackoverflow.com/questions/1080150/getting-the-bottom-16-bits-of-a-java-int-as-a-signed-16-bit-value
-    // Checks if the first 16 bits is 0
-    private static boolean isIgnored(int value) {
+    // Checks if the first 32 bits is 0
+    public static boolean isIgnored(long value) {
         // checks the last bit if 1 is root otherwise not root
 //        return getUsed(value) == 0;
         return getRoot(value) == 0;
     }
 
-    // Returns the last 16 bits
-    private static int getSize(int value) {
-        return ((value >> 16) & 0xffff);
+    // Returns the last 32 bits
+    public static long getSize(long value) {
+        return ((value >> 32) & 0xffffffffL);
     }
 
-    // Sets the first 16 bits to the sets size
-    private static void setSize(int[] a, int index, int value) {
-        int root = (a[index] & 0xffff);
-        a[index] = (value << 16) + root;
+    // Sets the last 32 bits to the sets size
+    public static void setSize(long[] a, int index, long value) {
+        long root = (a[index] & 0xffffffffL);
+        a[index] = (value << 32) + root;
     }
 
-    // Returns the first 16 bits
-    private static int getRoot(int value) {
-        return (value & 0xffff);
+    // Returns the first 32 bits
+    public static long getRoot(long value) {
+        return (value & 0xffffffffL);
     }
 
-    // Sets the first 16 bits to the roots index
-    private static void setRoot(int[] a, int index, int value) {
-        int size = ((a[index] >> 16) & 0xffff);
-        a[index] = (size << 16) + value;
+    // Sets the first 32 bits to the roots index
+    public static void setRoot(long[] a, int index, long value) {
+        long size = ((a[index] >> 32) & 0xffffffffL);
+        a[index] = (size << 32) + value;
     }
 
 }

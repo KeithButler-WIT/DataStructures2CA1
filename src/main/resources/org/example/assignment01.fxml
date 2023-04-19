@@ -107,7 +107,7 @@
                       <Color red="0.624" green="0.624" blue="0.624" fx:id="x2" />
                     </textFill>
                   </Label>
-                        <Button fx:id="grayscaleButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onKeyPressed="#onGrayscaleButtonClick" text="To Black/White" />
+                        <Button fx:id="blackWhiteButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#onBlackWhiteButtonClick" text="To Black/White" />
                         <VBox>
                            <children>
                               <Label text="Hue" />
@@ -158,7 +158,7 @@
                           </image></ImageView>
                            </Pane>
                       <Pane prefHeight="200.0" prefWidth="200.0">
-                      <ImageView fx:id="grayscaleImageView" fitHeight="247.0" fitWidth="444.0" layoutX="6.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
+                      <ImageView fx:id="blackWhiteImageView" fitHeight="247.0" fitWidth="444.0" layoutX="6.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
                           <image>
                           </image></ImageView>
                   </Pane>
